@@ -9,7 +9,7 @@ const avatarService = new AvatarService()
 const avatarCache = new Map<string, string>()
 const pendingRequests = new Map<string, Promise<string>>()
 
-export async function fetchAvatarBlobUrl(user: IUser, size = 50) {
+export async function fetchAvatarBlobUrl(user: IUser, size = 50): Promise<string> {
 	if (!user || !user.username) {
 		return ''
 	}

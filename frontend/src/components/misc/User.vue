@@ -8,8 +8,9 @@
 			:height="avatarSize"
 			:src="avatarSrc"
 			:width="avatarSize"
-			:alt="'Avatar of ' + displayName"
+			:alt="imageError ? 'Avatar of ' + displayName : ''"
 			class="avatar"
+			@error="() => { if (avatarSrc) { imageError = true } }"
 		>
 		<span
 			v-if="showUsername"
@@ -37,9 +38,16 @@ const props = withDefaults(defineProps<{
 
 const displayName = computed(() => getDisplayName(props.user))
 const avatarSrc = ref('')
+const imageError = ref(false)
 
 async function loadAvatar() {
-	avatarSrc.value = await fetchAvatarBlobUrl(props.user, props.avatarSize)
+	imageError.value = false
+	try {
+		avatarSrc.value = await fetchAvatarBlobUrl(props.user, props.avatarSize)
+	}
+	catch {
+		imageError.value = true
+	}
 }
 
 watch(() => [props.user, props.avatarSize], loadAvatar, { immediate: true })
