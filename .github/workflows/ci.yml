@@ -10,6 +10,7 @@ on:
       - v*
     branches:
       - main
+      - ci/docker-build
 
 concurrency:
   # main merges use a unique run_id so they don't cancel each other
@@ -27,7 +28,7 @@ jobs:
 
   release:
     name: Release
-    if: ${{ github.ref_type == 'tag' || github.ref_name == 'main' }}
+    if: ${{ github.ref_type == 'tag' || github.ref_name == 'main' || github.ref_name == 'ci/docker-build' }}
     uses: ./.github/workflows/release.yml
     needs:
       - test
