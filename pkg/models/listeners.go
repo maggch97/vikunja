@@ -851,6 +851,11 @@ func reloadTaskInEvent(s *xorm.Session, event map[string]interface{}, doerID int
 		return err
 	}
 	if err == nil {
+		// Preserve the original done value from the event payload to avoid
+		// reading stale data when the transaction has not yet committed.
+		if originalDone, ok := t["done"]; ok {
+			fullTask.Done = originalDone.(bool)
+		}
 		event["task"] = fullTask
 	}
 
